@@ -82,8 +82,17 @@ type Result struct {
 func SearchImage(word string) string {
 	baseUrl := "https://www.googleapis.com/customsearch/v1"
 	s := Search{os.Getenv("CUSTOM_SEARCH_KEY"), os.Getenv("CUSTOM_SEARCH_ENGINE_ID"), "image", "1"}
-	url := baseUrl + "?key=" + s.Key + "&cx=" + s.EngineId + "&searchType=" + s.Type + "&num=" + s.Count + "&q="
-	url += strings.TrimSpace(word)
+	word = strings.TrimSpace(word)
+
+	url := baseUrl + "?key=" + s.Key + "&cx=" + s.EngineId + "&searchType=" + s.Type + "&num=" + s.Count + "&q=" + word
+	log.Println(url)
+
+	imageUrl := ParseJson(url)
+	return imageUrl
+}
+
+func ParseJson(url string) string {
+	var imageUrl = "not search image"
 
 	response, err := http.Get(url)
 	if err != nil {
@@ -96,14 +105,16 @@ func SearchImage(word string) string {
 	if err != nil {
 		log.Println(err)
 	}
+
 	jsonBytes := ([]byte)(byteArray)
 	data := new(Result)
 	if err := json.Unmarshal(jsonBytes, data); err != nil {
 		fmt.Println("json error:", err)
 	}
-
-	imageUrl := data.Items[0].Link
-	log.Println(imageUrl)
+	if data.Items != nil {
+		imageUrl = data.Items[0].Link
+		log.Println(imageUrl)
+	}
 
 	return imageUrl
 }
