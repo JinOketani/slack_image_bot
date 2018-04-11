@@ -9,15 +9,15 @@ import (
 )
 
 func server(res http.ResponseWriter, req *http.Request) {
+	fmt.Fprintln(res, "success")
 	token := slack.New(os.Getenv("SLACK_API_TOKEN"))
 	cli.Run(token)
-	fmt.Fprintln(res, "success")
 }
 
 func main() {
 	http.HandleFunc("/", server)
 	fmt.Println("listening...")
-	err := http.ListenAndServe(":"+os.Getenv("port"), nil)
+	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	if err != nil {
 		panic(err)
 	}
