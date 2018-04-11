@@ -1,1 +1,1 @@
-web: slack-image-search-bot
+web: slack_image_bot
