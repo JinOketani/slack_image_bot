@@ -20,8 +20,8 @@ func Run(api *slack.Client) int {
 			case *slack.HelloEvent:
 				log.Println("====Start====")
 			case *slack.MessageEvent:
-				if strings.Contains(ev.Text, "your user id") { // ex: <@U9U7Z06CV>
-					rep := regexp.MustCompile(`your user id`) // ex: <@U9U7Z06CV>
+				if strings.Contains(ev.Text, "<@U9U7Z06CV>") { // ex: <@U9U7Z06CV>
+					rep := regexp.MustCompile(`<@U9U7Z06CV>`) // ex: <@U9U7Z06CV>
 					image = rep.ReplaceAllString(ev.Text, "")
 					image = SearchImage(image)
 					rtm.SendMessage(rtm.NewOutgoingMessage(image, ev.Channel))
